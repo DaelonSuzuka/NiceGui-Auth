@@ -12,16 +12,33 @@ MAKEFLAGS += -s
 run: venv
 	$(VENV_PYTHON) src/main.py
 
-# run the application in pdb
-debug: venv
-	$(VENV_PYTHON) -m pdb src/main.py
+# build the application's docker image locally
+image:
+	docker build . -t isotope_nicegui
 
-# ---------------------------------------------------------------------------- #
+# **************************************************************************** #
+# stack commands
 
-# remove the various build outputs
-clean:
-	-@ $(RM) build
-	-@ $(RM) dist
+STACK_NAME := isotope
+
+# create the application's network
+network:
+	docker network create --driver=overlay --attachable isotope
+
+# deploy the application's docker stack
+deploy:
+	docker stack deploy -c stack.yml $(STACK_NAME)
+
+# delete the application's docker stack
+undeploy:
+	docker stack rm $(STACK_NAME)
+
+# delete then deploy the stack
+redeploy: undeploy deploy
+
+# check the status of the stack
+ps:
+	docker stack ps $(STACK_NAME) --no-trunc
 
 # **************************************************************************** #
 # python venv settings

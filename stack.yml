@@ -1,0 +1,30 @@
+version: "3.5"
+
+volumes:
+  redis_data:
+
+networks:
+  isotope:
+    external: true
+
+services:
+  redis:
+    image: 'redis/redis-stack:6.2.6-v7'
+    networks:
+      isotope:
+        aliases:
+          - isotope_redis
+    volumes:
+      - redis_data:/data
+      - ./services/redis.conf:/redis.conf
+
+  isotope:
+    image: isotope_nicegui
+    networks:
+      - isotope
+    #   - REDIS_OM_URL=redis://@redis:6379
+    volumes: 
+      - .:/app/ # copy entire app into container
+    depends_on:
+      - redis
+  
