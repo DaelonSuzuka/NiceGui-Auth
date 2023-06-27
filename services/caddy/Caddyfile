@@ -1,0 +1,7 @@
+https://isotope.daelon.net {
+	reverse_proxy isotope:8081
+}
+
+https://magnusdei.io {
+	reverse_proxy localhost:5000
+}

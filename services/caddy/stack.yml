@@ -1,0 +1,19 @@
+version: "3.5"
+
+networks:
+  isotope:
+    external: true
+
+services:
+  caddy:
+    image: caddy:2.6.4
+    networks:
+      - isotope
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      # - ./certs:/certs
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    command: "caddy run --config /etc/caddy/Caddyfile --watch"
